@@ -172,7 +172,11 @@ if excel_file:
                     c1, c2 = st.columns(2)
                     c1.metric("AUC ROC", auc_texto)
                     c2.metric("Brier Score", f"{brier:.3f}")
-                    st.caption("AUC: capacidad de discriminar deriva/no deriva. Brier: calibración (más bajo es mejor).")
+                    st.caption(
+                    "El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva, "
+                    "mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas. "
+                    "Valores altos de AUC y bajos de Brier indican un desempeño adecuado del modelo."
+                    )
 
           
                 # Creación de informe
