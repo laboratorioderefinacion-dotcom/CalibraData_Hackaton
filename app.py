@@ -29,15 +29,17 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 st.set_page_config(page_title="Modelo Isotónico", layout="centered")
 
 
-# CSS: ocultar el icono de enlace (anchor) en títulos
+# CSS: ocultar el icono de enlace (anchor) en títulos y agrandar métricas
+
 st.markdown("""
 <style>
-a.anchor-link { 
-    display: none !important; 
-}
-a[href^="#"] { 
-    display: none !important; 
-}
+a.anchor-link { display: none !important; }
+a[href^="#"] { display: none !important; }
+
+.metrics-big div[data-testid="stMetricValue"] { font-size: 40px !important; }
+.metrics-big div[data-testid="stMetricLabel"] { font-size: 18px !important; }
+
+.block-container { padding-top: 2rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -166,10 +168,16 @@ if excel_file:
 
             # Métricas del Modelo
 
-            with st.expander("📌 Ver Métricas del Modelo"):
+            
+            with st.expander("📌 Ver métricas del modelo"):
+                st.markdown('<div class="metrics-big">', unsafe_allow_html=True)
+
                 c1, c2 = st.columns(2)
                 c1.metric("AUC ROC", auc_texto)
                 c2.metric("Brier Score", f"{brier:.3f}")
+
+                st.markdown('</div>', unsafe_allow_html=True)
+
                 st.markdown(
                 "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
                 "Mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas.  \n"
