@@ -36,7 +36,7 @@ excel_file = st.file_uploader("📂 Subir archivo Excel", type=["xlsx"])
 
 if excel_file:
 
-    if st.button("🚀 Generar Predicción"):
+    if st.button("🚀 Generar Informe"):
 
         with tempfile.TemporaryDirectory() as tmpdir:
 
