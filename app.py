@@ -133,7 +133,7 @@ if excel_file:
                     color="black",
                     linestyle=":",
                     linewidth=2,
-                    label=f"P50 ≈ {P50}"
+                    label=f"P50 ≈ {P50} {variable}"
                 )
 
             ax.set_xlabel(f"Uso acumulado ({variable})")
