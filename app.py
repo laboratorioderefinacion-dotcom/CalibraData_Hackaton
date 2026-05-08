@@ -36,10 +36,22 @@ st.markdown("""
 a.anchor-link { display: none !important; }
 a[href^="#"] { display: none !important; }
 
-.metrics-big div[data-testid="stMetricValue"] { font-size: 40px !important; }
-.metrics-big div[data-testid="stMetricLabel"] { font-size: 25px !important; }
-
 .block-container { padding-top: 2rem; }
+
+/* SOLO dentro del wrapper metrics-big */
+.metrics-big div[data-testid="stMetricValue"] {
+    font-size: 44px !important;
+}
+
+.metrics-big div[data-testid="stMetricLabel"] {
+    font-size: 22px !important;
+}
+
+/* A veces el texto real del label está en <p> o <span> */
+.metrics-big div[data-testid="stMetricLabel"] * {
+    font-size: 22px !important;
+}
+
 </style>
 """, unsafe_allow_html=True)
 
@@ -170,6 +182,7 @@ if excel_file:
 
             
             with st.expander("📌 Ver métricas del modelo"):
+                
                 st.markdown('<div class="metrics-big">', unsafe_allow_html=True)
 
                 c1, c2 = st.columns(2)
@@ -177,6 +190,7 @@ if excel_file:
                 c2.metric("Brier Score", f"{brier:.3f}")
 
                 st.markdown('</div>', unsafe_allow_html=True)
+
 
                 st.markdown(
                 "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
