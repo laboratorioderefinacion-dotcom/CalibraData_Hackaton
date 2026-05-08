@@ -95,31 +95,29 @@ if excel_file:
             
             grafico_path = os.path.join(tmpdir, "grafico.png")
 
-            plt.figure(figsize=(8, 4))
+            fig, ax = plt.subplots(figsize=(8, 4))
 
             # Datos
             
-            plt.scatter(
-                X,
-                y,
+            ax.scatter(
+                X, y,
                 alpha=0.6,
                 label="Observaciones",
                 color="tab:blue"
             )
 
             # Modelo
-            
-            plt.plot(
-                uso_grid,
-                prob_grid,
+
+            ax.plot(
+                uso_grid, prob_grid,
                 color="red",
                 linewidth=2,
                 label="Modelo isotónico"
             )
 
             # Línea horizontal P=0.50
-            
-            plt.axhline(
+
+            ax.axhline(
                 0.5,
                 color="gray",
                 linestyle="--",
@@ -128,9 +126,9 @@ if excel_file:
             )
 
             # Línea vertical P50
-            
+
             if not np.isnan(P50):
-                plt.axvline(
+                ax.axvline(
                     P50,
                     color="black",
                     linestyle=":",
@@ -138,22 +136,22 @@ if excel_file:
                     label=f"P50 ≈ {P50}"
                 )
 
-            # Etiquetas
-            
-            plt.xlabel(f"Uso acumulado ({variable})")
-            plt.ylabel("Probabilidad de deriva")
-            plt.title(f"Modelo isotónico – {equipo}")
+            ax.set_xlabel(f"Uso acumulado ({variable})")
+            ax.set_ylabel("Probabilidad de deriva")
+            ax.set_title(f"Modelo isotónico – {equipo}")
+            ax.legend()
 
-            # Leyenda
-            
-            plt.legend()
+            # ✅ Mostrar en pantalla ANTES del Word
 
-            # Guardar
-            
-            plt.savefig(grafico_path, dpi=200, bbox_inches="tight")
-            plt.close()
+            st.subheader("📈 Gráfico del modelo")
+            st.pyplot(fig, clear_figure=False)
 
+            # ✅ Guardar para insertarlo en el Word
 
+            fig.savefig(grafico_path, dpi=200, bbox_inches="tight")
+            plt.close(fig)
+
+          
             # Creación de informe
 
             plantilla = "Formulario.docx"
