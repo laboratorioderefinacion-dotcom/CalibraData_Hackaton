@@ -28,6 +28,20 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 st.set_page_config(page_title="Modelo Isotónico", layout="centered")
 
+
+# CSS: ocultar el icono de enlace (anchor) en títulos
+st.markdown("""
+<style>
+a.anchor-link { 
+    display: none !important; 
+}
+a[href^="#"] { 
+    display: none !important; 
+}
+</style>
+""", unsafe_allow_html=True)
+
+
 st.title("📊 CalibraData – Modelo Isotónico")
 
 # Subir excel
@@ -92,12 +106,6 @@ if excel_file:
 
                 brier = brier_score_loss(y, y_prob)
 
-                with st.expander("📌 Ver Métricas del Modelo"):
-                    c1, c2 = st.columns(2)
-                    c1.metric("AUC ROC", auc_texto)
-                    c2.metric("Brier Score", f"{brier:.3f}")
-                    st.caption("AUC: capacidad de discriminar deriva/no deriva. Brier: calibración (más bajo es mejor).")
-
                 # Gráfico
             
                 grafico_path = os.path.join(tmpdir, "grafico.png")
@@ -157,6 +165,14 @@ if excel_file:
 
                 fig.savefig(grafico_path, dpi=200, bbox_inches="tight")
                 plt.close(fig)
+
+                # Métricas del Modelo
+
+                with st.expander("📌 Ver Métricas del Modelo"):
+                    c1, c2 = st.columns(2)
+                    c1.metric("AUC ROC", auc_texto)
+                    c2.metric("Brier Score", f"{brier:.3f}")
+                    st.caption("AUC: capacidad de discriminar deriva/no deriva. Brier: calibración (más bajo es mejor).")
 
           
                 # Creación de informe
