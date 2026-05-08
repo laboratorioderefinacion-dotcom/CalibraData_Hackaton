@@ -4,6 +4,10 @@
 # In[ ]:
 
 
+# Código APP CalibraData
+
+# Librerías
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -19,25 +23,20 @@ from docx import Document
 from docx.shared import Inches
 from docx.enum.text import WD_ALIGN_PARAGRAPH
 
-# ==============================
-# CONFIG
-# ==============================
+
+# Configuración de la app
 
 st.set_page_config(page_title="Modelo Isotónico", layout="centered")
 
 st.title("📊 CalibraData – Modelo Isotónico")
 
-# ==============================
-# INPUT
-# ==============================
+# Subir excel
+
 excel_file = st.file_uploader("📂 Subir archivo Excel", type=["xlsx"])
 
-# ==============================
-# PROCESO
-# ==============================
 if excel_file:
 
-    if st.button("🚀 Generar informe"):
+    if st.button("🚀 Generar Predicción"):
 
         with tempfile.TemporaryDirectory() as tmpdir:
 
@@ -46,9 +45,8 @@ if excel_file:
             with open(excel_path, "wb") as f:
                 f.write(excel_file.read())
 
-            # ==============================
-            # CARGA DE DATOS
-            # ==============================
+            # Datos extraidos del excel
+        
             datos = pd.read_excel(excel_path, header=None)
 
             equipo = str(datos.iloc[0, 0]).strip()
@@ -57,9 +55,8 @@ if excel_file:
             X = pd.to_numeric(datos.iloc[2:, 0], errors="coerce").to_numpy()
             y = pd.to_numeric(datos.iloc[2:, 1], errors="coerce").astype(int)
 
-            # ==============================
-            # MODELO
-            # ==============================
+            # Modelo Isotónico Pooled
+
             modelo = IsotonicRegression(increasing=True, out_of_bounds="clip")
             modelo.fit(X, y)
 
@@ -93,15 +90,15 @@ if excel_file:
 
             brier = brier_score_loss(y, y_prob)
 
-            # ==============================
-            # GRÁFICO
-            # ==============================
+
+            # Gráfico
             
             grafico_path = os.path.join(tmpdir, "grafico.png")
 
             plt.figure(figsize=(8, 4))
 
             # Datos
+            
             plt.scatter(
                 X,
                 y,
@@ -111,6 +108,7 @@ if excel_file:
             )
 
             # Modelo
+            
             plt.plot(
                 uso_grid,
                 prob_grid,
@@ -120,6 +118,7 @@ if excel_file:
             )
 
             # Línea horizontal P=0.50
+            
             plt.axhline(
                 0.5,
                 color="gray",
@@ -129,6 +128,7 @@ if excel_file:
             )
 
             # Línea vertical P50
+            
             if not np.isnan(P50):
                 plt.axvline(
                     P50,
@@ -139,20 +139,23 @@ if excel_file:
                 )
 
             # Etiquetas
+            
             plt.xlabel(f"Uso acumulado ({variable})")
             plt.ylabel("Probabilidad de deriva")
             plt.title(f"Modelo isotónico – {equipo}")
 
             # Leyenda
+            
             plt.legend()
 
             # Guardar
+            
             plt.savefig(grafico_path, dpi=200, bbox_inches="tight")
             plt.close()
 
-            # ==============================
-            # WORD
-            # ==============================
+
+            # Creación de informe
+
             plantilla = "Formulario.docx"
 
             doc = MailMerge(plantilla)
@@ -170,6 +173,7 @@ if excel_file:
             doc.write(docx_out)
 
             # Insertar gráfico en Word
+            
             d = Document(docx_out)
 
             for p in d.paragraphs:
@@ -181,9 +185,9 @@ if excel_file:
 
             d.save(docx_out)
 
-            # ==============================
-            # DESCARGA
-            # ==============================
+            
+            # Descargar Informe Word
+          
             with open(docx_out, "rb") as f:
                 st.download_button(
                     "⬇️ Descargar informe Word",
@@ -191,6 +195,4 @@ if excel_file:
                     file_name=f"Reporte_{equipo}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
-
-            st.success("✅ Informe generado correctamente")
 
