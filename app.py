@@ -36,7 +36,7 @@ excel_file = st.file_uploader("📂 Subir archivo Excel", type=["xlsx"])
 
 if excel_file:
 
-    if st.button("🚀 Generar Informe"):
+    if st.button("🚀 Generar Predicción"):
 
         with tempfile.TemporaryDirectory() as tmpdir:
 
@@ -190,7 +190,7 @@ if excel_file:
           
             with open(docx_out, "rb") as f:
                 st.download_button(
-                    "⬇️ Descargar informe Word",
+                    "⬇️ Descargar Reporte Word",
                     f.read(),
                     file_name=f"Reporte_{equipo}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
