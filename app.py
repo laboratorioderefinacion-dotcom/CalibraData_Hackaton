@@ -37,7 +37,7 @@ a.anchor-link { display: none !important; }
 a[href^="#"] { display: none !important; }
 
 .metrics-big div[data-testid="stMetricValue"] { font-size: 40px !important; }
-.metrics-big div[data-testid="stMetricLabel"] { font-size: 18px !important; }
+.metrics-big div[data-testid="stMetricLabel"] { font-size: 25px !important; }
 
 .block-container { padding-top: 2rem; }
 </style>
