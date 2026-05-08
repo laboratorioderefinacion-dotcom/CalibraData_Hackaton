@@ -44,12 +44,12 @@ a[href^="#"] { display: none !important; }
 }
 
 .metrics-big div[data-testid="stMetricLabel"] {
-    font-size: 22px !important;
+    font-size: 35px !important;
 }
 
 /* A veces el texto real del label está en <p> o <span> */
 .metrics-big div[data-testid="stMetricLabel"] * {
-    font-size: 22px !important;
+    font-size: 35px !important;
 }
 
 </style>
