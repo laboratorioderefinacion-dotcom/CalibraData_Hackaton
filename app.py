@@ -170,11 +170,11 @@ if excel_file:
                 c1, c2 = st.columns(2)
                 c1.metric("AUC ROC", auc_texto)
                 c2.metric("Brier Score", f"{brier:.3f}")
-                st.caption(
-                "El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva,\n "
-                "mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas.\n "
-                "Valores altos de AUC y bajos de Brier indican un desempeño adecuado del modelo."
-                )
+                st.markdown(
+                "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
+                "Mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas.  \n"
+                "Valores altos de AUC y bajos de Brier indican un desempeño adecuado del modelo.*"
+            )
 
             # Creación de informe
 
