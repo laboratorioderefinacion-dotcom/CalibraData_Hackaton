@@ -1,2 +1,2 @@
 # CalibraData_Hackaton
-Modelo Isotónico Pooled
+Modelo Regresión Isotónica
