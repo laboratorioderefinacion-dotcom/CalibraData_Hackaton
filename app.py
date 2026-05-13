@@ -26,7 +26,7 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 # Configuración de la app
 
-st.set_page_config(page_title="Modelo Isotónico", layout="centered")
+st.set_page_config(page_title="Modelo Regresión Isotónica", layout="centered")
 
 
 # CSS: ocultar el icono de enlace (anchor) en títulos y agrandar métricas
@@ -44,7 +44,7 @@ a[href^="#"] { display: none !important; }
 """, unsafe_allow_html=True)
 
 
-st.title("📊 CalibraData – Modelo Isotónico")
+st.title("📊 CalibraData")
 
 # Subir excel
 
@@ -127,7 +127,7 @@ if excel_file:
                 uso_grid, prob_grid,
                 color="red",
                 linewidth=2,
-                label="Modelo isotónico"
+                label="Modelo Regresión Isotónica"
             )
 
             # Línea horizontal P=0.50
@@ -153,7 +153,7 @@ if excel_file:
 
             ax.set_xlabel(f"Uso acumulado ({variable})")
             ax.set_ylabel("Probabilidad de deriva")
-            ax.set_title(f"Modelo isotónico – {equipo}")
+            ax.set_title(f"Modelo Regresión Isotónica – {equipo}")
             ax.legend()
             
             # ✅ Mostrar en pantalla ANTES del Word
@@ -222,7 +222,7 @@ if excel_file:
                 st.download_button(
                     "⬇️ Descargar Informe Técnico",
                     f.read(),
-                    file_name=f"Reporte_{equipo}.docx",
+                    file_name=f"Informe {equipo}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
 
