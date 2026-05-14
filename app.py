@@ -37,7 +37,7 @@ def color_auc(auc_value):
         return "#6b7280", "No disponible"  # gris
 
     if auc_value >= 0.80:
-        return "#16a34a", "Buena"         # verde
+        return "#16a34a", "Excelente"         # verde
     elif auc_value >= 0.70:
         return "#f59e0b", "Aceptable"     # amarillo
     else:
@@ -47,9 +47,9 @@ def color_auc(auc_value):
 def color_brier(brier_value):
     """
     Brier Score (calibración)
-    🟢 < 0.10
-    🟡 0.10 - 0.20
-    🔴 > 0.20
+    🟢 =< 0.20
+    🟡 0.20 - 0.30
+    🔴 > 0.30
     """
     if brier_value is None or (isinstance(brier_value, float) and np.isnan(brier_value)):
         return "#6b7280", "No disponible"  # gris
