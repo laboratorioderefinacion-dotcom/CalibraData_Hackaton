@@ -54,7 +54,7 @@ def color_brier(brier_value):
     if brier_value is None or (isinstance(brier_value, float) and np.isnan(brier_value)):
         return "#6b7280", "No disponible"  # gris
 
-    if brier_value =< 0.20:
+    if brier_value <= 0.20:
         return "#16a34a", "Excelente"      # verde
     elif brier_value <= 0.30:
         return "#f59e0b", "Aceptable"      # amarillo
