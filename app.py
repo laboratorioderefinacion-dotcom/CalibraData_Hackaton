@@ -47,7 +47,7 @@ def color_auc(auc_value):
 def color_brier(brier_value):
     """
     Brier Score (calibración)
-    🟢 =< 0.20
+    🟢 <= 0.20
     🟡 0.20 - 0.30
     🔴 > 0.30
     """
