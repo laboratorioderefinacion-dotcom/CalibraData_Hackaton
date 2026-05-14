@@ -231,47 +231,47 @@ if excel_file:
 
             with st.expander("📌 Ver métricas del modelo"):
 
-            c1, c2 = st.columns(2)
+                c1, c2 = st.columns(2)
 
-            # Colores según semáforo
-            auc_col, auc_estado = color_auc(auc_num)
-            br_col, br_estado = color_brier(brier)
+                # Colores según semáforo
+                auc_col, auc_estado = color_auc(auc_num)
+                br_col, br_estado = color_brier(brier)
 
-            # Variante elegante (compacta)
-            criterio_auc = "🟢≥0.80 | 🟡0.70–0.79 | 🔴<0.70"
-            criterio_brier = "🟢<0.10 | 🟡0.10–0.20 | 🔴>0.20"
+                # Variante elegante (compacta)
+                criterio_auc = "🟢≥0.80 | 🟡0.70–0.79 | 🔴<0.70"
+                criterio_brier = "🟢<0.10 | 🟡0.10–0.20 | 🔴>0.20"
 
-            # AUC
-            with c1:
-                st.markdown(f"""
-                <div class="metric-box">
-                  <div class="metric-label">AUC ROC</div>
-                  <div class="metric-value" style="color:{auc_col};">{auc_texto}</div>
-                  <div class="metric-sub">{auc_estado}</div>
-                  <div class="metric-sub" style="opacity:.68; font-size:0.85rem; margin-top:.30rem;">
-                    <b>Criterio:</b> {criterio_auc}
-                  </div>
-                </div>
-                """, unsafe_allow_html=True)
+                # AUC
+                with c1:
+                    st.markdown(f"""
+                    <div class="metric-box">
+                      <div class="metric-label">AUC ROC</div>
+                      <div class="metric-value" style="color:{auc_col};">{auc_texto}</div>
+                      <div class="metric-sub">{auc_estado}</div>
+                      <div class="metric-sub" style="opacity:.68; font-size:0.85rem; margin-top:.30rem;">
+                        <b>Criterio:</b> {criterio_auc}
+                      </div>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-            # Brier
-            with c2:
-                st.markdown(f"""
-                <div class="metric-box">
-                  <div class="metric-label">Brier Score</div>
-                  <div class="metric-value" style="color:{br_col};">{brier:.3f}</div>
-                  <div class="metric-sub">{br_estado}</div>
-                  <div class="metric-sub" style="opacity:.68; font-size:0.85rem; margin-top:.30rem;">
-                    <b>Criterio:</b> {criterio_brier}
-                  </div>
-                </div>
-                """, unsafe_allow_html=True)
+                # Brier
+                with c2:
+                    st.markdown(f"""
+                    <div class="metric-box">
+                      <div class="metric-label">Brier Score</div>
+                      <div class="metric-value" style="color:{br_col};">{brier:.3f}</div>
+                      <div class="metric-sub">{br_estado}</div>
+                      <div class="metric-sub" style="opacity:.68; font-size:0.85rem; margin-top:.30rem;">
+                        <b>Criterio:</b> {criterio_brier}
+                      </div>
+                    </div>
+                    """, unsafe_allow_html=True)
 
-            st.markdown(
-                "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
-                "Mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas.  \n"
-                "Valores altos de AUC y bajos de Brier indican un desempeño adecuado del modelo.*"
-            )
+                st.markdown(
+                    "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
+                    "Mientras que el Brier Score evalúa la confiabilidad de las probabilidades estimadas.  \n"
+                    "Valores altos de AUC y bajos de Brier indican un desempeño adecuado del modelo.*"
+                )
        
             # ---------------------------
             # Creación de informe
