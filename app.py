@@ -24,9 +24,9 @@ from docx.enum.text import WD_ALIGN_PARAGRAPH
 
 
 # ---------------------------
-# Funciones semáforo
+# Funciones semáforo (color del número)
 # ---------------------------
-def semaforo_auc(auc_value):
+def color_auc(auc_value):
     """
     AUC ROC (discriminación)
     🟢 >= 0.80
@@ -34,17 +34,17 @@ def semaforo_auc(auc_value):
     🔴 < 0.70
     """
     if auc_value is None or (isinstance(auc_value, float) and np.isnan(auc_value)):
-        return "⚪", "No disponible", "#6b7280"  # gris
+        return "#6b7280", "No disponible"  # gris
 
     if auc_value >= 0.80:
-        return "🟢", "Buena", "#16a34a"
+        return "#16a34a", "Buena"         # verde
     elif auc_value >= 0.70:
-        return "🟡", "Aceptable", "#f59e0b"
+        return "#f59e0b", "Aceptable"     # amarillo
     else:
-        return "🔴", "Revisar", "#dc2626"
+        return "#dc2626", "Revisar"       # rojo
 
 
-def semaforo_brier(brier_value):
+def color_brier(brier_value):
     """
     Brier Score (calibración)
     🟢 < 0.10
@@ -52,38 +52,14 @@ def semaforo_brier(brier_value):
     🔴 > 0.20
     """
     if brier_value is None or (isinstance(brier_value, float) and np.isnan(brier_value)):
-        return "⚪", "No disponible", "#6b7280"
+        return "#6b7280", "No disponible"  # gris
 
     if brier_value < 0.10:
-        return "🟢", "Excelente", "#16a34a"
+        return "#16a34a", "Excelente"      # verde
     elif brier_value <= 0.20:
-        return "🟡", "Aceptable", "#f59e0b"
+        return "#f59e0b", "Aceptable"      # amarillo
     else:
-        return "🔴", "Revisar", "#dc2626"
-
-
-def semaforo_global(auc_value, brier_value):
-    """
-    Semáforo global (simple y defendible para jurado):
-    🟢 Confiable: AUC >= 0.80 y Brier <= 0.20
-    🔴 Revisar:   AUC < 0.70 o Brier > 0.20
-    🟡 Intermedio en lo demás
-    """
-    # Si no hay AUC (dataset con una sola clase), no fuerzo un global “falso”
-    if auc_value is None or (isinstance(auc_value, float) and np.isnan(auc_value)):
-        # Igual podemos dar estado por Brier, pero lo dejo conservador
-        if brier_value is not None and not (isinstance(brier_value, float) and np.isnan(brier_value)):
-            if brier_value <= 0.20:
-                return "🟡", "Usable con cautela (AUC no disponible)", "#f59e0b"
-            else:
-                return "🔴", "Revisar (AUC no disponible)", "#dc2626"
-        return "⚪", "No disponible", "#6b7280"
-
-    if (auc_value >= 0.80) and (brier_value <= 0.20):
-        return "🟢", "Modelo confiable", "#16a34a"
-    if (auc_value < 0.70) or (brier_value > 0.20):
-        return "🔴", "Revisar modelo", "#dc2626"
-    return "🟡", "Usable con cautela", "#f59e0b"
+        return "#dc2626", "Revisar"        # rojo
 
 
 # ---------------------------
@@ -93,43 +69,40 @@ st.set_page_config(page_title="Modelo Regresión Isotónica", layout="centered")
 
 
 # ---------------------------
-# CSS: ocultar icono de enlace y agrandar métricas + estilos semáforo
+# CSS: ocultar el icono de enlace (anchor) + estilos tarjetas métricas con color
 # ---------------------------
 st.markdown("""
 <style>
 a.anchor-link { display: none !important; }
 a[href^="#"] { display: none !important; }
 
-.metrics-big div[data-testid="stMetricValue"] { font-size: 40px !important; }
-.metrics-big div[data-testid="stMetricLabel"] { font-size: 18px !important; }
-
 .block-container { padding-top: 2rem; }
 
-/* Badges semáforo */
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: .45rem;
-  padding: .38rem .65rem;
-  border-radius: 999px;
-  font-weight: 800;
-  font-size: 0.95rem;
-  line-height: 1.1;
-  border: 1px solid rgba(0,0,0,0.06);
-  box-shadow: 0 1px 6px rgba(0,0,0,0.08);
+/* “Tarjetas” para métricas con número coloreado */
+.metric-box{
+  padding: 0.8rem 0.9rem;
+  border-radius: 18px;
+  border: 1px solid rgba(0,0,0,0.08);
+  box-shadow: 0 1px 6px rgba(0,0,0,0.06);
 }
 
-.badge small{
+.metric-label{
+  font-size: 18px;
   font-weight: 700;
-  opacity: .92;
+  opacity: 0.85;
 }
 
-.badge-wrap{
-  display:flex;
-  gap:.6rem;
-  flex-wrap: wrap;
+.metric-value{
+  font-size: 40px;
+  font-weight: 900;
+  line-height: 1.1;
+  margin-top: .15rem;
+}
+
+.metric-sub{
   margin-top: .25rem;
-  margin-bottom: .6rem;
+  font-size: 0.9rem;
+  opacity: 0.85;
 }
 </style>
 """, unsafe_allow_html=True)
@@ -201,6 +174,7 @@ if excel_file:
             # Gráfico
             # ---------------------------
             grafico_path = os.path.join(tmpdir, "grafico.png")
+
             fig, ax = plt.subplots(figsize=(8, 4))
 
             # Datos
@@ -252,42 +226,35 @@ if excel_file:
             plt.close(fig)
 
             # ---------------------------
-            # Métricas del Modelo + Semáforo
+            # Métricas del Modelo (números en color)
             # ---------------------------
             with st.expander("📌 Ver métricas del modelo"):
-                st.markdown('<div class="metrics-big">', unsafe_allow_html=True)
 
                 c1, c2 = st.columns(2)
-                c1.metric("AUC ROC", auc_texto)
-                c2.metric("Brier Score", f"{brier:.3f}")
 
-                st.markdown('</div>', unsafe_allow_html=True)
+                # Colores según semáforo
+                auc_col, auc_estado = color_auc(auc_num)
+                br_col, br_estado = color_brier(brier)
 
-                # Semáforo individual + global
-                icon_auc, label_auc, color_auc = semaforo_auc(auc_num)
-                icon_br, label_br, color_br = semaforo_brier(brier)
-                icon_g, label_g, color_g = semaforo_global(auc_num, brier)
-
-                st.markdown(
-                    f"""
-                    <div class="badge-wrap">
-                      <div class="badge" style="background:{color_auc}22; color:{color_auc};">
-                        <span>{icon_auc}</span>
-                        <span>AUC: <small>{label_auc}</small></span>
-                      </div>
-                      <div class="badge" style="background:{color_br}22; color:{color_br};">
-                        <span>{icon_br}</span>
-                        <span>Brier: <small>{label_br}</small></span>
-                      </div>
+                # AUC
+                with c1:
+                    st.markdown(f"""
+                    <div class="metric-box">
+                      <div class="metric-label">AUC ROC</div>
+                      <div class="metric-value" style="color:{auc_col};">{auc_texto}</div>
+                      <div class="metric-sub">{auc_estado}</div>
                     </div>
+                    """, unsafe_allow_html=True)
 
-                    <div class="badge" style="background:{color_g}22; color:{color_g}; width: fit-content;">
-                      <span>{icon_g}</span>
-                      <span><b>{label_g}</b></span>
+                # Brier
+                with c2:
+                    st.markdown(f"""
+                    <div class="metric-box">
+                      <div class="metric-label">Brier Score</div>
+                      <div class="metric-value" style="color:{br_col};">{brier:.3f}</div>
+                      <div class="metric-sub">{br_estado}</div>
                     </div>
-                    """,
-                    unsafe_allow_html=True
-                )
+                    """, unsafe_allow_html=True)
 
                 st.markdown(
                     "*El AUC ROC refleja la capacidad del modelo para identificar correctamente casos con deriva.  \n"
@@ -299,6 +266,7 @@ if excel_file:
             # Creación de informe
             # ---------------------------
             plantilla = "Formulario.docx"
+
             doc = MailMerge(plantilla)
 
             doc.merge(
@@ -333,5 +301,4 @@ if excel_file:
                     file_name=f"Informe {equipo}.docx",
                     mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                 )
-
 
